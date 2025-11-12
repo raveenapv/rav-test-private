@@ -1,0 +1,33 @@
+name: rav-test-public
+type: service
+image:
+  type: build
+  build_spec:
+    type: dockerfile
+    dockerfile_path: ./Dockerfile
+    build_context_path: ./
+  # `build_source.branch_name` and `build_source.ref` will automatically be patched during deployment.
+  build_source:
+    ref: d4f1dacc1b7fde5a7d12d0d6f430569d07bd17de
+    type: git
+    repo_url: https://github.com/raveenapv/rav-test-private.git
+    branch_name: main
+  docker_registry: truefoundry:gcp:test-raveena:docker-registry:registry
+ports:
+  - host: main.test-raveena.truefoundry.tech
+    port: 3000
+    expose: true
+    protocol: TCP
+replicas: 1
+resources:
+  node:
+    type: node_selector
+    capacity_type: spot_fallback_on_demand
+  cpu_limit: 0.5
+  cpu_request: 0.2
+  memory_limit: 500
+  memory_request: 200
+  ephemeral_storage_limit: 2000
+  ephemeral_storage_request: 1000
+workspace_fqn: test-raveena:raveena-test
+allow_interception: false
